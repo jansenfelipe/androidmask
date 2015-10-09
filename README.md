@@ -11,7 +11,7 @@ Add mask on your EditText's
 
 ```
 dependencies {
-  compile 'br.com.jansenfelipe:androidmask:1.0.0'
+  compile 'br.com.jansenfelipe:androidmask:1.0.1'
 }
 ```
 ### Eclipse ADT
