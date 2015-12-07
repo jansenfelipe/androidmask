@@ -3,22 +3,21 @@ package br.com.jansenfelipe.androidmask;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
+import android.widget.TextView;
+
 import java.util.HashSet;
 import java.util.Set;
 
-public class MaskEditTextChangedListener implements TextWatcher{
-
-    private static MaskEditTextChangedListener instance;
-
+public class MaskEditTextChangedListener implements TextWatcher {
     private String mMask;
-    private EditText mEditText;
+    private TextView mTextView;
     private Set<String> symbolMask = new HashSet<String>();
     private boolean isUpdating;
     private String old = "";
 
-    public MaskEditTextChangedListener(String mask, EditText editText) {
+    public MaskEditTextChangedListener(String mask, TextView textView) {
         mMask = mask;
-        mEditText = editText;
+        mTextView = textView;
         initSymbolMask();
     }
 
@@ -33,7 +32,7 @@ public class MaskEditTextChangedListener implements TextWatcher{
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         String str = Utils.unmask(s.toString(), symbolMask);
-        String mascara = "";
+        String mascara = str.length() > old.length() ? Utils.mask(mMask,str) : s.toString();
 
         if (isUpdating) {
             old = str;
@@ -41,15 +40,12 @@ public class MaskEditTextChangedListener implements TextWatcher{
             return;
         }
 
-        if(str.length() > old.length())
-            mascara = Utils.mask(mMask,str);
-        else
-            mascara = s.toString();
-
         isUpdating = true;
 
-        mEditText.setText(mascara);
-        mEditText.setSelection(mascara.length());
+        mTextView.setText(mascara);
+        if (mTextView instanceof EditText) {
+            ((EditText) mTextView).setSelection(mascara.length());
+        }
     }
 
     @Override
